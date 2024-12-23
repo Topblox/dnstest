@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS Debugging Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .stat {
+            background-color: #f4f4f4;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .stat-title {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>DNS Debugging Test Page</h1>
+        
+        <div class="stat">
+            <div class="stat-title">Client IP Address:</div>
+            <div id="ip-address">Loading...</div>
+        </div>
+        
+        <div class="stat">
+            <div class="stat-title">DNS Server Used:</div>
+            <div id="dns-server">Loading...</div>
+        </div>
+        
+        <div class="stat">
+            <div class="stat-title">Resolved Domain (example.com):</div>
+            <div id="resolved-domain">Loading...</div>
+        </div>
+        
+        <div class="stat">
+            <div class="stat-title">Current Time (UTC):</div>
+            <div id="current-time">Loading...</div>
+        </div>
+        
+        <div class="stat">
+            <div class="stat-title">User Agent:</div>
+            <div id="user-agent">Loading...</div>
+        </div>
+        
+        <div class="stat">
+            <div class="stat-title">Network Status:</div>
+            <div id="network-status">Checking...</div>
+        </div>
+    </div>
+
+    <script>
+        // Function to get the client's IP address
+        async function getClientIP() {
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            document.getElementById('ip-address').textContent = data.ip;
+        }
+
+        // Function to get DNS Server (simulated, as real DNS server info is client-side)
+        function getDNSServer() {
+            // Placeholder, since JavaScript can't directly access DNS server info
+            document.getElementById('dns-server').textContent = '192.168.1.1 (simulated)';
+        }
+
+        // Function to resolve domain (example.com)
+        async function resolveDomain() {
+            const response = await fetch('https://dns.google/resolve?name=example.com&type=A');
+            const data = await response.json();
+            if (data.Answer) {
+                document.getElementById('resolved-domain').textContent = data.Answer.map(answer => answer.data).join(', ');
+            } else {
+                document.getElementById('resolved-domain').textContent = 'Error resolving domain';
+            }
+        }
+
+        // Function to get the current UTC time
+        function getCurrentTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toISOString();
+        }
+
+        // Function to get the User Agent
+        function getUserAgent() {
+            document.getElementById('user-agent').textContent = navigator.userAgent;
+        }
+
+        // Function to check network status
+        function checkNetworkStatus() {
+            if (navigator.onLine) {
+                document.getElementById('network-status').textContent = 'Online';
+            } else {
+                document.getElementById('network-status').textContent = 'Offline';
+            }
+        }
+
+        // Load stats on page load
+        window.onload = function() {
+            getClientIP();
+            getDNSServer();
+            resolveDomain();
+            getCurrentTime();
+            getUserAgent();
+            checkNetworkStatus();
+        };
+    </script>
+</body>
+</html>
